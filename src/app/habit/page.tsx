@@ -91,7 +91,7 @@ export default async function HabitDetailPage() {
         )}
 
         <div className="rounded-xl border border-border bg-surface p-4">
-          <HabitPreviewGrid cells={cells} />
+          <HabitPreviewGrid cells={cells} linkBase="/habit" />
         </div>
       </div>
     </main>
