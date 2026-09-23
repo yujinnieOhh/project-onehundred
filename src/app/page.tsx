@@ -12,14 +12,14 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#FFF9F4]">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-bg px-5">
       <div className="text-center">
         <p className="text-sm tracking-wide text-[#D9A7A7]">PROJECT</p>
-        <p className="text-3xl font-bold text-[#22201F]">ONE HUNDRED</p>
+        <p className="text-3xl font-bold text-text-primary">ONE HUNDRED</p>
       </div>
       <button
         onClick={handleLogin}
-        className="rounded-full bg-[#22201F] px-6 py-3 text-white"
+        className="rounded-full bg-text-primary px-6 py-3 text-white"
       >
         Continue with Google
       </button>
