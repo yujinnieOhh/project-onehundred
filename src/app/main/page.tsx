@@ -222,6 +222,14 @@ export default async function MainPage() {
             ))
           )}
         </div>
+
+        <footer className="flex flex-col items-center gap-1 py-4 text-center text-xs text-text-secondary">
+          <p>여러분의 남은 2026년을 응원합니다</p>
+          <p>문의 및 제안 사항은 여기로!</p>
+          <a href="mailto:yujinnieohh@gmail.com" className="underline">
+            yujinnieohh@gmail.com
+          </a>
+        </footer>
       </div>
     </main>
   );
