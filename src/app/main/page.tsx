@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getLocalDateString, daysUntil } from '@/lib/date'
 import { DoneButton } from '@/components/DoneButton'
+import { NoteButton } from '@/components/NoteButton'
 
 export default async function MainPage() {
   const supabase = await createClient()
@@ -25,11 +26,11 @@ export default async function MainPage() {
   if (!challenge) redirect('/setup')
 
   const today = getLocalDateString(profile.timezone)
-  const dDay = daysUntil(today, challenge.end_date)
+  const dDay = daysUntil(today, '2027-01-01')
 
   const { data: todayCheckin } = await supabase
     .from('checkins')
-    .select('id')
+    .select('id, note')
     .eq('challenge_id', challenge.id)
     .eq('date', today)
     .maybeSingle()
@@ -47,7 +48,7 @@ export default async function MainPage() {
             <p className="text-xl font-bold text-text-primary">
               {dDay > 0 ? `D-${dDay}` : 'D-DAY'}
             </p>
-            <p className="text-xs text-text-secondary">12/31까지</p>
+            <p className="text-xs text-text-secondary">2027년까지</p>
           </div>
           <div>
             <p className="text-xl font-bold text-text-primary">{doneCount ?? 0}개</p>
@@ -59,6 +60,7 @@ export default async function MainPage() {
           <p className="text-sm font-semibold text-text-secondary">TODAY&apos;S GOAL</p>
           <p className="text-lg font-bold text-text-primary">{challenge.goal}</p>
           <DoneButton completedToday={!!todayCheckin} />
+          {todayCheckin && <NoteButton initialNote={todayCheckin.note} />}
         </div>
       </div>
     </main>

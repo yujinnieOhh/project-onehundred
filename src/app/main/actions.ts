@@ -35,6 +35,19 @@ export async function markDone() {
   revalidatePath('/main')
 }
 
+export async function saveNote(note: string) {
+  const ctx = await getContext()
+  if (!ctx) return
+
+  const today = getLocalDateString(ctx.profile.timezone)
+  await ctx.supabase
+    .from('checkins')
+    .update({ note })
+    .eq('challenge_id', ctx.challenge.id)
+    .eq('date', today)
+  revalidatePath('/main')
+}
+
 export async function undoDone() {
   const ctx = await getContext()
   if (!ctx) return
