@@ -32,14 +32,24 @@ export default function PrivacyPage() {
       </section>
 
       <section className="mb-6">
-        <h2 className="mb-2 text-lg font-semibold">4. 정보 삭제</h2>
+        <h2 className="mb-2 text-lg font-semibold">4. 분석 도구</h2>
+        <p>
+          서비스 개선을 위해 Vercel Analytics, PostHog, Microsoft Clarity를
+          사용해 페이지 방문, 클릭 등 이용 행태를 익명 또는 가명 처리된
+          형태로 수집합니다. 세션 녹화 기능이 포함될 수 있으며, 이는 서비스
+          UX 개선 목적으로만 사용됩니다.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="mb-2 text-lg font-semibold">5. 정보 삭제</h2>
         <p>
           계정 삭제 또는 정보 삭제를 원하시면 아래 문의처로 연락해 주세요.
         </p>
       </section>
 
       <section>
-        <h2 className="mb-2 text-lg font-semibold">5. 문의</h2>
+        <h2 className="mb-2 text-lg font-semibold">6. 문의</h2>
         <p>yujinnieohh@gmail.com</p>
       </section>
     </main>
