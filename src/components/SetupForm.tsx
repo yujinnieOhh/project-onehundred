@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useState } from 'react'
 import { createProfile, type SetupState } from '@/app/setup/actions'
+import { Logo } from '@/components/Logo'
 
 const initialState: SetupState = { error: null }
 
@@ -21,8 +22,7 @@ export function SetupForm() {
   return (
     <form action={formAction} className="flex w-full max-w-sm flex-col gap-6 px-5 py-12">
       <div className="text-center">
-        <p className="text-sm tracking-wide text-[#D9A7A7]">PROJECT</p>
-        <p className="text-3xl font-bold text-text-primary">ONE HUNDRED</p>
+        <Logo />
       </div>
 
       <input type="hidden" name="timezone" value={timezone} />

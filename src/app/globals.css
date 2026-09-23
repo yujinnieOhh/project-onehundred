@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @import "pretendard/dist/web/static/pretendard.css";
 
+@font-face {
+  font-family: "Retroma Vibes";
+  src: url("/fonts/RetromaVibesRegular-rgwXB.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #fff9f4;
   --surface: #ffffff;
@@ -12,8 +20,11 @@
   --pink-deep: #d95f86;
   --brown-accent: #795548;
   --future-circle: #e7e1dc;
-  --missed-dog: #2e2927;
-  --today-pending-dog: #000000;
+  --missed-dog: #000000;
+  --today-pending-dog: #2e2927;
+  --logo-project: #d9a7a7;
+  --logo-one: #f3b6c2;
+  --logo-hundred: #d8c3a5;
 }
 
 @theme inline {
@@ -29,7 +40,11 @@
   --color-future-circle: var(--future-circle);
   --color-missed-dog: var(--missed-dog);
   --color-today-pending-dog: var(--today-pending-dog);
+  --color-logo-project: var(--logo-project);
+  --color-logo-one: var(--logo-one);
+  --color-logo-hundred: var(--logo-hundred);
   --font-sans: "Pretendard", -apple-system, sans-serif;
+  --font-logo: "Retroma Vibes", "Pretendard", sans-serif;
 }
 
 body {
