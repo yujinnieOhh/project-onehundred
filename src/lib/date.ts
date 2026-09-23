@@ -21,3 +21,12 @@ export function addDays(dateStr: string, delta: number): string {
 export function formatDots(dateStr: string): string {
   return dateStr.replaceAll('-', '.')
 }
+
+/** Monday (start of week, Mon-Sun) of the week containing `dateStr`. */
+export function mondayOfWeek(dateStr: string): string {
+  const d = new Date(`${dateStr}T00:00:00Z`)
+  const day = d.getUTCDay() // 0=Sun..6=Sat
+  const diff = day === 0 ? 6 : day - 1
+  d.setUTCDate(d.getUTCDate() - diff)
+  return d.toISOString().slice(0, 10)
+}

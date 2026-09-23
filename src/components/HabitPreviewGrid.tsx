@@ -10,19 +10,16 @@ export function HabitPreviewGrid({
   return (
     <div className="grid grid-cols-7 gap-2">
       {cells.map((cell) => (
-        <div
-          key={cell.date}
-          className="relative flex aspect-square items-center justify-center rounded-full bg-future-circle"
-        >
-          {cell.state !== 'future' && (
+        <div key={cell.date} className="relative aspect-square">
+          {cell.state === 'future' ? (
+            <div className="h-full w-full rounded-full bg-future-circle" />
+          ) : (
             <Image
               src="/images/animals/sg_stamp.png"
               alt=""
               fill
               sizes="40px"
-              className={
-                cell.state === 'missed' ? 'object-contain opacity-[0.78] brightness-0' : 'object-contain'
-              }
+              className={cell.state === 'missed' ? 'object-contain opacity-[0.78] brightness-0' : 'object-contain'}
             />
           )}
         </div>

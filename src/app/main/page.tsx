@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getLocalDateString, daysUntil, addDays, formatDots } from '@/lib/date'
+import { getLocalDateString, daysUntil, addDays, formatDots, mondayOfWeek } from '@/lib/date'
 import { DoneButton } from '@/components/DoneButton'
 import { NoteButton } from '@/components/NoteButton'
 import { SpeechBubble } from '@/components/SpeechBubble'
@@ -45,7 +45,7 @@ export default async function MainPage() {
     .eq('challenge_id', challenge.id)
     .eq('completed', true)
 
-  const previewStart = addDays(today, -13)
+  const previewStart = addDays(mondayOfWeek(today), -7)
   const { data: previewCheckins } = await supabase
     .from('checkins')
     .select('date, completed')
@@ -75,7 +75,10 @@ export default async function MainPage() {
       <div className="flex w-full max-w-sm flex-col gap-8">
         <div className="flex justify-around rounded-xl border border-border bg-surface p-4 text-center">
           <div>
-            <p className="text-xs text-text-secondary">{formatDots(today)}</p>
+            <p className="text-xl font-bold text-text-primary">{formatDots(today)}</p>
+            <p className="text-xs text-text-secondary">오늘</p>
+          </div>
+          <div>
             <p className="text-xl font-bold text-text-primary">
               {dDay > 0 ? `D-${dDay}` : 'D-DAY'}
             </p>
