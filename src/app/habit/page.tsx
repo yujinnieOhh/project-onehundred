@@ -73,7 +73,7 @@ export default async function HabitDetailPage() {
             {(rewards ?? []).map((r) => (
               <div key={r.target_count} className="flex items-center justify-between text-sm">
                 <span className="text-text-primary">
-                  {r.target_count}개 {r.is_unlocked && '✓'}
+                  {completedByDate.size}/{r.target_count}개 {r.is_unlocked && '✓'}
                 </span>
                 <span className="text-text-secondary">{r.title}</span>
               </div>
