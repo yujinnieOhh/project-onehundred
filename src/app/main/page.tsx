@@ -1,13 +1,7 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import {
-  getLocalDateString,
-  daysUntil,
-  addDays,
-  formatDots,
-  mondayOfWeek,
-} from "@/lib/date";
+import { getLocalDateString, daysUntil, addDays, formatDots } from "@/lib/date";
 import { DoneButton } from "@/components/DoneButton";
 import { NoteButton } from "@/components/NoteButton";
 import { SpeechBubble } from "@/components/SpeechBubble";
@@ -32,7 +26,7 @@ export default async function MainPage() {
 
   const { data: challenge } = await supabase
     .from("challenges")
-    .select("id, goal, end_date, created_at")
+    .select("id, goal, start_date, end_date, created_at")
     .eq("user_id", user.id)
     .maybeSingle();
   if (!challenge) redirect("/setup");
@@ -57,7 +51,15 @@ export default async function MainPage() {
     .eq("challenge_id", challenge.id)
     .eq("completed", true);
 
-  const previewStart = addDays(mondayOfWeek(today), -7);
+  // Grid is anchored to the global challenge start (not a rolling window),
+  // chunked into fixed rows of 5 days, so every user's day 1 lines up in the
+  // same column regardless of weekday or when they personally joined.
+  const daysSinceStart = daysUntil(challenge.start_date, today);
+  const chunkIndex = Math.floor(daysSinceStart / 5);
+  const chunkStart = addDays(challenge.start_date, chunkIndex * 5);
+  const previewStart = chunkIndex > 0 ? addDays(chunkStart, -5) : chunkStart;
+  const previewLength = chunkIndex > 0 ? 10 : 5;
+
   const { data: previewCheckins } = await supabase
     .from("checkins")
     .select("date, completed")
@@ -71,7 +73,7 @@ export default async function MainPage() {
       .map((c) => [c.date, true])
   );
 
-  const previewCells = Array.from({ length: 14 }, (_, i) => {
+  const previewCells = Array.from({ length: previewLength }, (_, i) => {
     const date = addDays(previewStart, i);
     let state: HabitCellState;
     if (date > today) {
