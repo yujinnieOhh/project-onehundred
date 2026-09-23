@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { sendReaction, REACTION_EMOJIS } from '@/app/friends/reaction-actions'
+import { sendReaction } from '@/app/friends/reaction-actions'
+import { REACTION_EMOJIS } from '@/lib/reactions'
 
 export function ReactionPicker({
   checkinId,
