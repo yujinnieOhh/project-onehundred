@@ -31,7 +31,7 @@ export default async function HabitDetailPage() {
 
   const { data: checkins } = await supabase
     .from('checkins')
-    .select('date, completed')
+    .select('id, date, completed')
     .eq('challenge_id', challenge.id)
     .gte('date', joinDate)
     .lte('date', challenge.end_date)
@@ -40,10 +40,23 @@ export default async function HabitDetailPage() {
     (checkins ?? []).filter((c) => c.completed).map((c) => [c.date, true])
   )
 
+  const completedCheckinIds = (checkins ?? []).filter((c) => c.completed).map((c) => c.id)
+  const { data: reactions } =
+    completedCheckinIds.length > 0
+      ? await supabase.from('reactions').select('checkin_id').in('checkin_id', completedCheckinIds)
+      : { data: [] }
+  const reactedCheckinIds = new Set((reactions ?? []).map((r) => r.checkin_id))
+  const checkinIdByDate = new Map((checkins ?? []).map((c) => [c.date, c.id]))
+
   const totalDays = daysUntil(joinDate, challenge.end_date) + 1
   const cells = Array.from({ length: totalDays }, (_, i) => {
     const date = addDays(joinDate, i)
-    return { date, state: habitCellState(date, today, joinDate, completedByDate.has(date)) }
+    const checkinId = checkinIdByDate.get(date)
+    return {
+      date,
+      state: habitCellState(date, today, joinDate, completedByDate.has(date)),
+      hasReaction: !!checkinId && reactedCheckinIds.has(checkinId),
+    }
   })
 
   const { data: rewards } = await supabase

@@ -64,7 +64,7 @@ export default async function MainPage() {
 
   const { data: previewCheckins } = await supabase
     .from("checkins")
-    .select("date, completed")
+    .select("id, date, completed")
     .eq("challenge_id", challenge.id)
     .gte("date", previewStart)
     .lte("date", today);
@@ -75,9 +75,24 @@ export default async function MainPage() {
       .map((c) => [c.date, true])
   );
 
+  const previewCompletedIds = (previewCheckins ?? [])
+    .filter((c) => c.completed)
+    .map((c) => c.id);
+  const { data: previewReactions } =
+    previewCompletedIds.length > 0
+      ? await supabase.from("reactions").select("checkin_id").in("checkin_id", previewCompletedIds)
+      : { data: [] };
+  const previewReactedIds = new Set((previewReactions ?? []).map((r) => r.checkin_id));
+  const previewCheckinIdByDate = new Map((previewCheckins ?? []).map((c) => [c.date, c.id]));
+
   const previewCells = Array.from({ length: previewLength }, (_, i) => {
     const date = addDays(previewStart, i);
-    return { date, state: habitCellState(date, today, joinDate, completedByDate.has(date)) };
+    const checkinId = previewCheckinIdByDate.get(date);
+    return {
+      date,
+      state: habitCellState(date, today, joinDate, completedByDate.has(date)),
+      hasReaction: !!checkinId && previewReactedIds.has(checkinId),
+    };
   });
 
   const friends = await getAcceptedFriendsWithActivity(supabase, user.id);

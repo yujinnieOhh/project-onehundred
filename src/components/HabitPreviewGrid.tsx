@@ -11,7 +11,7 @@ const imageByState: Partial<Record<HabitCellState, string>> = {
 export function HabitPreviewGrid({
   cells,
 }: {
-  cells: { date: string; state: HabitCellState }[]
+  cells: { date: string; state: HabitCellState; hasReaction?: boolean }[]
 }) {
   return (
     <div className="grid grid-cols-5 gap-2">
@@ -22,7 +22,21 @@ export function HabitPreviewGrid({
           ) : cell.state === 'preJoin' ? (
             <div className="h-full w-full rounded-full border border-border" />
           ) : (
-            <Image src={imageByState[cell.state]!} alt="" fill sizes="40px" className="object-contain" />
+            <Image
+              src={imageByState[cell.state]!}
+              alt=""
+              fill
+              sizes="40px"
+              className="object-contain"
+              style={
+                cell.hasReaction
+                  ? {
+                      filter:
+                        'drop-shadow(0 0 1px #F49AB5) drop-shadow(0 0 4px rgba(244,154,181,.8))',
+                    }
+                  : undefined
+              }
+            />
           )}
         </div>
       ))}
