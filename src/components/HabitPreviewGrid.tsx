@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-export type HabitCellState = 'future' | 'completed' | 'missed'
+export type HabitCellState = 'future' | 'preJoin' | 'completed' | 'missed'
 
 export function HabitPreviewGrid({
   cells,
@@ -13,6 +13,8 @@ export function HabitPreviewGrid({
         <div key={cell.date} className="relative aspect-square">
           {cell.state === 'future' ? (
             <div className="h-full w-full rounded-full bg-future-circle" />
+          ) : cell.state === 'preJoin' ? (
+            <div className="h-full w-full rounded-full border border-border" />
           ) : (
             <Image
               src="/images/animals/sg_stamp.png"
