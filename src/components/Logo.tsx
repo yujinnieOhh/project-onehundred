@@ -1,7 +1,7 @@
 export function Logo({ size = "lg" }: { size?: "lg" | "sm" }) {
   if (size === "sm") {
     return (
-      <span className="font-logo text-lg">
+      <span className="font-logo text-2xl">
         <span className="text-logo-project">PROJECT</span>
         <span className="text-logo-one">ONE</span>
         <span className="text-logo-hundred">HUNDRED</span>

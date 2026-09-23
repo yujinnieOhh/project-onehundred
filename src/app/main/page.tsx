@@ -111,7 +111,7 @@ export default async function MainPage() {
   return (
     <main className="flex min-h-screen flex-col items-center bg-bg px-5 py-10">
       <ReminderModal />
-      <div className="flex w-full max-w-sm flex-col gap-8">
+      <div className="flex w-full max-w-sm flex-col gap-6">
         <div className="flex items-center justify-between">
           <Logo size="sm" />
           <Link
@@ -122,7 +122,7 @@ export default async function MainPage() {
           </Link>
         </div>
 
-        <div className="flex justify-around rounded-sm border border-border bg-surface px-4 py-2 text-center">
+        <div className="flex justify-around rounded-sm border border-border bg-surface p-4 text-center">
           <div>
             <p className="text-xl font-bold text-text-primary">
               {formatDots(today)}
@@ -143,32 +143,34 @@ export default async function MainPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-4 rounded-sm border border-border bg-surface px-4 py-2">
-          <Image
-            src="/images/animals/sg_cheerup.png"
-            alt="sg"
-            width={140}
-            height={140}
-            className="shrink-0"
-            priority
-          />
-          <div className="flex flex-1 flex-col gap-3">
+        <div className="flex flex-col gap-4 rounded-sm border border-border bg-surface p-6">
+          <div className="flex items-center gap-3">
+            <Image
+              src="/images/animals/sg_cheerup.png"
+              alt="sg"
+              width={140}
+              height={140}
+              className="shrink-0"
+              priority
+            />
             <SpeechBubble>
-              <p className="font-bold text-text-primary">{challenge.goal}</p>
-              <p className="text-sm text-text-secondary">
+              <p className="font-bold text-text-primary text-center">
+                {challenge.goal}
+              </p>
+              <p className="text-sm text-text-secondary text-center">
                 {todayCheckin?.completed
                   ? "오늘 완료 축하한다멍"
                   : "오늘 완료했냐멍?"}
               </p>
             </SpeechBubble>
-            <div className="flex gap-3">
-              <DoneButton completedToday={!!todayCheckin?.completed} />
-              <NoteButton initialNote={todayCheckin?.note ?? null} />
-            </div>
+          </div>
+          <div className="flex justify-center gap-3">
+            <DoneButton completedToday={!!todayCheckin?.completed} />
+            <NoteButton initialNote={todayCheckin?.note ?? null} />
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 rounded-sm border border-border bg-surface px-4 py-2">
+        <div className="flex flex-col gap-3 rounded-sm border border-border bg-surface p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-text-secondary">
               나의 100일
@@ -183,7 +185,7 @@ export default async function MainPage() {
           <HabitPreviewGrid cells={previewCells} />
         </div>
 
-        <div className="flex flex-col gap-3 rounded-sm border border-border bg-surface px-4 py-2">
+        <div className="flex flex-col gap-3 rounded-sm border border-border bg-surface p-4">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-text-secondary">친구</p>
             <Link
