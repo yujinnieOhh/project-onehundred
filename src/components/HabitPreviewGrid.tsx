@@ -1,6 +1,11 @@
 import Image from 'next/image'
 
-export type HabitCellState = 'future' | 'preJoin' | 'completed' | 'missed'
+export type HabitCellState = 'future' | 'preJoin' | 'completed' | 'missed' | 'todayPending'
+
+const dogFilterClass: Partial<Record<HabitCellState, string>> = {
+  missed: 'object-contain opacity-[0.78] brightness-0',
+  todayPending: 'object-contain brightness-0',
+}
 
 export function HabitPreviewGrid({
   cells,
@@ -21,7 +26,7 @@ export function HabitPreviewGrid({
               alt=""
               fill
               sizes="40px"
-              className={cell.state === 'missed' ? 'object-contain opacity-[0.78] brightness-0' : 'object-contain'}
+              className={dogFilterClass[cell.state] ?? 'object-contain'}
             />
           )}
         </div>

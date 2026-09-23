@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getLocalDateString, daysUntil, addDays, formatDots } from "@/lib/date";
+import { getAcceptedFriendsWithActivity } from "@/lib/friends";
 import { DoneButton } from "@/components/DoneButton";
 import { NoteButton } from "@/components/NoteButton";
 import { SpeechBubble } from "@/components/SpeechBubble";
@@ -85,10 +87,13 @@ export default async function MainPage() {
     } else if (date < today) {
       state = "missed";
     } else {
-      state = "future"; // today, not completed yet
+      state = "todayPending"; // today, not completed yet
     }
     return { date, state };
   });
+
+  const friends = await getAcceptedFriendsWithActivity(supabase, user.id);
+  const activeFriends = friends.filter((f) => f.completedToday || f.completedYesterday);
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-bg px-5 py-10">
@@ -144,6 +149,31 @@ export default async function MainPage() {
             나의 100일
           </p>
           <HabitPreviewGrid cells={previewCells} />
+        </div>
+
+        <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-semibold text-text-secondary">친구</p>
+            <Link href="/friends" className="text-xs text-text-secondary underline">
+              전체보기
+            </Link>
+          </div>
+          {activeFriends.length === 0 ? (
+            <p className="text-sm text-text-secondary">
+              오늘/어제 완료한 친구가 아직 없어요.
+            </p>
+          ) : (
+            activeFriends.map((f) => (
+              <div key={f.id} className="flex items-center justify-between text-sm">
+                <span className="text-text-primary">
+                  {f.nickname} <span className="text-text-secondary">@{f.username}</span>
+                </span>
+                <span className="text-xs text-pink-deep">
+                  {f.completedToday ? "오늘 완료 ✓" : "어제 완료 ✓"}
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </main>
