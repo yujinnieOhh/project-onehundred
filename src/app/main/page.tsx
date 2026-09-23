@@ -84,6 +84,12 @@ export default async function MainPage() {
   return (
     <main className="flex min-h-screen flex-col items-center bg-bg px-5 py-10">
       <div className="flex w-full max-w-sm flex-col gap-8">
+        <div className="flex justify-end">
+          <Link href="/settings" className="text-xs text-text-secondary underline">
+            설정
+          </Link>
+        </div>
+
         <div className="flex justify-around rounded-xl border border-border bg-surface p-4 text-center">
           <div>
             <p className="text-xl font-bold text-text-primary">

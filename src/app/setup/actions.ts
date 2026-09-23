@@ -62,23 +62,24 @@ export async function createProfile(
     return { error: '챌린지 생성에 실패했어요. 다시 시도해주세요.' }
   }
 
+  // Always create all 5 milestone rows, even with a blank title, so every
+  // milestone always shows on the rewards list and can be filled in later
+  // from Settings.
   const rewardEntries = [
-    { target_count: 7, title: String(formData.get('reward7') ?? '').trim() },
-    { target_count: 20, title: String(formData.get('reward20') ?? '').trim() },
-    { target_count: 50, title: String(formData.get('reward50') ?? '').trim() },
-    { target_count: 77, title: String(formData.get('reward77') ?? '').trim() },
-    { target_count: 100, title: String(formData.get('reward100') ?? '').trim() },
-  ].filter((r) => r.title.length > 0 && r.title.length <= 50)
+    { target_count: 7, title: String(formData.get('reward7') ?? '').trim().slice(0, 50) },
+    { target_count: 20, title: String(formData.get('reward20') ?? '').trim().slice(0, 50) },
+    { target_count: 50, title: String(formData.get('reward50') ?? '').trim().slice(0, 50) },
+    { target_count: 77, title: String(formData.get('reward77') ?? '').trim().slice(0, 50) },
+    { target_count: 100, title: String(formData.get('reward100') ?? '').trim().slice(0, 50) },
+  ]
 
-  if (rewardEntries.length > 0) {
-    await supabase.from('rewards').insert(
-      rewardEntries.map((r) => ({
-        challenge_id: challenge.id,
-        target_count: r.target_count,
-        title: r.title,
-      }))
-    )
-  }
+  await supabase.from('rewards').insert(
+    rewardEntries.map((r) => ({
+      challenge_id: challenge.id,
+      target_count: r.target_count,
+      title: r.title,
+    }))
+  )
 
   redirect('/main')
 }
