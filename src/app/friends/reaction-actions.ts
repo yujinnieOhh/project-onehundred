@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 
-export const REACTION_EMOJIS = ['🐥', '🍉', '🌷', '⭐', '🎈']
+export const REACTION_EMOJIS = ['🩷', '👍', '🐶', '🎉', '🌕']
 
 export async function sendReaction(checkinId: string, emoji: string) {
   if (!REACTION_EMOJIS.includes(emoji)) return

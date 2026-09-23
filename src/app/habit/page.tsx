@@ -63,10 +63,6 @@ export default async function HabitDetailPage() {
         </div>
         <p className="text-sm text-text-secondary">{challenge.goal}</p>
 
-        <div className="rounded-xl border border-border bg-surface p-4">
-          <HabitPreviewGrid cells={cells} />
-        </div>
-
         {(rewards ?? []).length > 0 && (
           <div className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-4">
             <p className="text-sm font-semibold text-text-secondary">REWARDS</p>
@@ -80,6 +76,10 @@ export default async function HabitDetailPage() {
             ))}
           </div>
         )}
+
+        <div className="rounded-xl border border-border bg-surface p-4">
+          <HabitPreviewGrid cells={cells} />
+        </div>
       </div>
     </main>
   )
