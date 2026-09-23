@@ -9,3 +9,15 @@ export function daysUntil(fromDateStr: string, toDateStr: string): number {
   const to = Date.parse(`${toDateStr}T00:00:00Z`)
   return Math.round((to - from) / 86_400_000)
 }
+
+/** Adds (or subtracts, with a negative delta) whole days to a YYYY-MM-DD string. */
+export function addDays(dateStr: string, delta: number): string {
+  const d = new Date(`${dateStr}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + delta)
+  return d.toISOString().slice(0, 10)
+}
+
+/** "2026-09-23" -> "2026.09.23" */
+export function formatDots(dateStr: string): string {
+  return dateStr.replaceAll('-', '.')
+}

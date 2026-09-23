@@ -1,10 +1,11 @@
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getLocalDateString, daysUntil } from '@/lib/date'
+import { getLocalDateString, daysUntil, addDays, formatDots } from '@/lib/date'
 import { DoneButton } from '@/components/DoneButton'
 import { NoteButton } from '@/components/NoteButton'
 import { SpeechBubble } from '@/components/SpeechBubble'
+import { HabitPreviewGrid, type HabitCellState } from '@/components/HabitPreviewGrid'
 
 export default async function MainPage() {
   const supabase = await createClient()
@@ -22,13 +23,14 @@ export default async function MainPage() {
 
   const { data: challenge } = await supabase
     .from('challenges')
-    .select('id, goal, end_date')
+    .select('id, goal, end_date, created_at')
     .eq('user_id', user.id)
     .maybeSingle()
   if (!challenge) redirect('/setup')
 
   const today = getLocalDateString(profile.timezone)
   const dDay = daysUntil(today, '2027-01-01')
+  const joinDate = getLocalDateString(profile.timezone, new Date(challenge.created_at))
 
   const { data: todayCheckin } = await supabase
     .from('checkins')
@@ -43,11 +45,37 @@ export default async function MainPage() {
     .eq('challenge_id', challenge.id)
     .eq('completed', true)
 
+  const previewStart = addDays(today, -13)
+  const { data: previewCheckins } = await supabase
+    .from('checkins')
+    .select('date, completed')
+    .eq('challenge_id', challenge.id)
+    .gte('date', previewStart)
+    .lte('date', today)
+
+  const completedByDate = new Map(
+    (previewCheckins ?? []).filter((c) => c.completed).map((c) => [c.date, true])
+  )
+
+  const previewCells = Array.from({ length: 14 }, (_, i) => {
+    const date = addDays(previewStart, i)
+    let state: HabitCellState = 'future'
+    if (date < joinDate || date > today) {
+      state = 'future'
+    } else if (completedByDate.has(date)) {
+      state = 'completed'
+    } else if (date < today) {
+      state = 'missed'
+    }
+    return { date, state }
+  })
+
   return (
     <main className="flex min-h-screen flex-col items-center bg-bg px-5 py-10">
       <div className="flex w-full max-w-sm flex-col gap-8">
         <div className="flex justify-around rounded-xl border border-border bg-surface p-4 text-center">
           <div>
+            <p className="text-xs text-text-secondary">{formatDots(today)}</p>
             <p className="text-xl font-bold text-text-primary">
               {dDay > 0 ? `D-${dDay}` : 'D-DAY'}
             </p>
@@ -80,6 +108,11 @@ export default async function MainPage() {
             <DoneButton completedToday={!!todayCheckin?.completed} />
             <NoteButton initialNote={todayCheckin?.note ?? null} />
           </div>
+        </div>
+
+        <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
+          <p className="text-sm font-semibold text-text-secondary">나의 100일</p>
+          <HabitPreviewGrid cells={previewCells} />
         </div>
       </div>
     </main>
