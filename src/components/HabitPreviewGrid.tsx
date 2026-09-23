@@ -2,9 +2,10 @@ import Image from 'next/image'
 
 export type HabitCellState = 'future' | 'preJoin' | 'completed' | 'missed' | 'todayPending'
 
-const dogFilterClass: Partial<Record<HabitCellState, string>> = {
-  missed: 'object-contain opacity-[0.78] brightness-0',
-  todayPending: 'object-contain brightness-0',
+const imageByState: Partial<Record<HabitCellState, string>> = {
+  completed: '/images/animals/sg_stamp.png',
+  missed: '/images/animals/sg_stamp_missed.png',
+  todayPending: '/images/animals/sg_stamp_today.png',
 }
 
 export function HabitPreviewGrid({
@@ -21,13 +22,7 @@ export function HabitPreviewGrid({
           ) : cell.state === 'preJoin' ? (
             <div className="h-full w-full rounded-full border border-border" />
           ) : (
-            <Image
-              src="/images/animals/sg_stamp.png"
-              alt=""
-              fill
-              sizes="40px"
-              className={dogFilterClass[cell.state] ?? 'object-contain'}
-            />
+            <Image src={imageByState[cell.state]!} alt="" fill sizes="40px" className="object-contain" />
           )}
         </div>
       ))}

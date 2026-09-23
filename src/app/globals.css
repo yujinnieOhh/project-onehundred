@@ -13,6 +13,7 @@
   --brown-accent: #795548;
   --future-circle: #e7e1dc;
   --missed-dog: #2e2927;
+  --today-pending-dog: #000000;
 }
 
 @theme inline {
@@ -27,6 +28,7 @@
   --color-brown-accent: var(--brown-accent);
   --color-future-circle: var(--future-circle);
   --color-missed-dog: var(--missed-dog);
+  --color-today-pending-dog: var(--today-pending-dog);
   --font-sans: "Pretendard", -apple-system, sans-serif;
 }
 
