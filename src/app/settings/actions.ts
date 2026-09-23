@@ -41,6 +41,34 @@ export async function updateRewards(
   return { error: null, success: '저장했어요.' }
 }
 
+export async function updateGoal(
+  _prev: SettingsState,
+  formData: FormData
+): Promise<SettingsState> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: '로그인이 필요해요.', success: null }
+
+  const goal = String(formData.get('goal') ?? '').trim()
+  if (!goal || goal.length > 40) {
+    return { error: '목표를 1~40자로 입력해주세요.', success: null }
+  }
+
+  const { error } = await supabase
+    .from('challenges')
+    .update({ goal })
+    .eq('user_id', user.id)
+
+  if (error) return { error: '저장하지 못했어요. 다시 시도해주세요.', success: null }
+
+  revalidatePath('/main')
+  revalidatePath('/habit')
+  revalidatePath('/settings')
+  return { error: null, success: '저장했어요.' }
+}
+
 export async function signOut() {
   const supabase = await createClient()
   await supabase.auth.signOut()

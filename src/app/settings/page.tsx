@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { RewardsSettingsForm } from '@/components/RewardsSettingsForm'
+import { GoalSettingsForm } from '@/components/GoalSettingsForm'
 import { signOut } from './actions'
 
 export default async function SettingsPage() {
@@ -13,7 +14,7 @@ export default async function SettingsPage() {
 
   const { data: challenge } = await supabase
     .from('challenges')
-    .select('id')
+    .select('id, goal')
     .eq('user_id', user.id)
     .maybeSingle()
   if (!challenge) redirect('/setup')
@@ -33,6 +34,7 @@ export default async function SettingsPage() {
             메인으로
           </Link>
         </div>
+        <GoalSettingsForm goal={challenge.goal} />
         <RewardsSettingsForm rewards={rewards ?? []} />
 
         <form action={signOut}>
