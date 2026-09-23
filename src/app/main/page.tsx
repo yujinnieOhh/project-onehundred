@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getLocalDateString, daysUntil, addDays, formatDots } from "@/lib/date";
 import { getAcceptedFriendsWithActivity } from "@/lib/friends";
 import { habitCellState } from "@/lib/habit";
+import { ReactionPicker } from "@/components/ReactionPicker";
 import { DoneButton } from "@/components/DoneButton";
 import { NoteButton } from "@/components/NoteButton";
 import { SpeechBubble } from "@/components/SpeechBubble";
@@ -162,10 +163,16 @@ export default async function MainPage() {
               <div key={f.id} className="flex items-center justify-between text-sm">
                 <span className="text-text-primary">
                   {f.nickname} <span className="text-text-secondary">@{f.username}</span>
+                  <span className="ml-2 text-xs text-pink-deep">
+                    {f.completedToday ? "오늘 완료 ✓" : "어제 완료 ✓"}
+                  </span>
                 </span>
-                <span className="text-xs text-pink-deep">
-                  {f.completedToday ? "오늘 완료 ✓" : "어제 완료 ✓"}
-                </span>
+                {f.activeCheckinId && (
+                  <ReactionPicker
+                    checkinId={f.activeCheckinId}
+                    myReactionEmoji={f.myReactionEmoji}
+                  />
+                )}
               </div>
             ))
           )}

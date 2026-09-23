@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
 export type SettingsState = { error: string | null; success: string | null }
@@ -38,4 +39,10 @@ export async function updateRewards(
   revalidatePath('/habit')
   revalidatePath('/settings')
   return { error: null, success: '저장했어요.' }
+}
+
+export async function signOut() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  redirect('/')
 }

@@ -1,0 +1,53 @@
+'use client'
+
+import { useState, useTransition } from 'react'
+import { sendReaction, REACTION_EMOJIS } from '@/app/friends/reaction-actions'
+
+export function ReactionPicker({
+  checkinId,
+  myReactionEmoji,
+}: {
+  checkinId: string
+  myReactionEmoji: string | null
+}) {
+  const [open, setOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
+
+  if (myReactionEmoji) {
+    return <span className="text-lg" aria-label={`내가 보낸 반응: ${myReactionEmoji}`}>{myReactionEmoji}</span>
+  }
+
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="text-xs text-text-secondary underline"
+      >
+        반응하기
+      </button>
+    )
+  }
+
+  return (
+    <div className="flex gap-1">
+      {REACTION_EMOJIS.map((emoji) => (
+        <button
+          key={emoji}
+          type="button"
+          aria-label={`${emoji} 반응 보내기`}
+          disabled={isPending}
+          onClick={() =>
+            startTransition(async () => {
+              await sendReaction(checkinId, emoji)
+              setOpen(false)
+            })
+          }
+          className="text-lg disabled:opacity-50"
+        >
+          {emoji}
+        </button>
+      ))}
+    </div>
+  )
+}

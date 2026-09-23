@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getAcceptedFriendsWithActivity } from '@/lib/friends'
 import { FriendRequestForm } from '@/components/FriendRequestForm'
 import { AcceptFriendButton } from '@/components/AcceptFriendButton'
+import { ReactionPicker } from '@/components/ReactionPicker'
 
 export default async function FriendsPage() {
   const supabase = await createClient()
@@ -72,10 +73,16 @@ export default async function FriendsPage() {
                 {f.nickname} <span className="text-text-secondary">@{f.username}</span>
               </p>
               {f.goal && <p className="text-xs text-text-secondary">{f.goal}</p>}
-              {(f.completedToday || f.completedYesterday) && (
-                <p className="text-xs text-pink-deep">
-                  {f.completedToday ? '오늘 완료 ✓' : '어제 완료 ✓'}
-                </p>
+              {f.activeCheckinId && (
+                <div className="flex items-center gap-2">
+                  <p className="text-xs text-pink-deep">
+                    {f.completedToday ? '오늘 완료 ✓' : '어제 완료 ✓'}
+                  </p>
+                  <ReactionPicker
+                    checkinId={f.activeCheckinId}
+                    myReactionEmoji={f.myReactionEmoji}
+                  />
+                </div>
               )}
             </div>
           ))}

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { RewardsSettingsForm } from '@/components/RewardsSettingsForm'
+import { signOut } from './actions'
 
 export default async function SettingsPage() {
   const supabase = await createClient()
@@ -33,6 +34,15 @@ export default async function SettingsPage() {
           </Link>
         </div>
         <RewardsSettingsForm rewards={rewards ?? []} />
+
+        <form action={signOut}>
+          <button
+            type="submit"
+            className="w-full rounded-full border border-border bg-surface px-6 py-3 font-semibold text-text-primary"
+          >
+            로그아웃
+          </button>
+        </form>
       </div>
     </main>
   )

@@ -10,6 +10,8 @@ export type FriendActivity = {
   goal: string
   completedToday: boolean
   completedYesterday: boolean
+  activeCheckinId: string | null
+  myReactionEmoji: string | null
 }
 
 /** Accepted friends of `userId`, each with their own today/yesterday completion (their own timezone). */
@@ -43,18 +45,36 @@ export async function getAcceptedFriendsWithActivity(
 
       let completedToday = false
       let completedYesterday = false
+      let activeCheckinId: string | null = null
 
       if (challenge) {
         const friendToday = getLocalDateString(p.timezone)
         const friendYesterday = addDays(friendToday, -1)
         const { data: recent } = await supabase
           .from('checkins')
-          .select('date, completed')
+          .select('id, date, completed')
           .eq('challenge_id', challenge.id)
           .in('date', [friendToday, friendYesterday])
 
-        completedToday = (recent ?? []).some((c) => c.date === friendToday && c.completed)
-        completedYesterday = (recent ?? []).some((c) => c.date === friendYesterday && c.completed)
+        const todayCheckin = (recent ?? []).find((c) => c.date === friendToday && c.completed)
+        const yesterdayCheckin = (recent ?? []).find(
+          (c) => c.date === friendYesterday && c.completed
+        )
+
+        completedToday = !!todayCheckin
+        completedYesterday = !!yesterdayCheckin
+        activeCheckinId = todayCheckin?.id ?? yesterdayCheckin?.id ?? null
+      }
+
+      let myReactionEmoji: string | null = null
+      if (activeCheckinId) {
+        const { data: myReaction } = await supabase
+          .from('reactions')
+          .select('emoji')
+          .eq('checkin_id', activeCheckinId)
+          .eq('sender_id', userId)
+          .maybeSingle()
+        myReactionEmoji = myReaction?.emoji ?? null
       }
 
       return {
@@ -64,6 +84,8 @@ export async function getAcceptedFriendsWithActivity(
         goal: challenge?.goal ?? '',
         completedToday,
         completedYesterday,
+        activeCheckinId,
+        myReactionEmoji,
       }
     })
   )
