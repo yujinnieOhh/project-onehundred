@@ -14,10 +14,13 @@ const CLICKABLE_STATES: HabitCellState[] = ['completed', 'missed', 'todayPending
 export function HabitPreviewGrid({
   cells,
   linkBase,
+  onCellClick,
 }: {
   cells: { date: string; state: HabitCellState; hasReaction?: boolean }[]
-  /** When set, completed/missed/todayPending cells link to `${linkBase}/${date}`. */
+  /** Completed/missed/todayPending cells link to `${linkBase}/${date}`. Ignored if `onCellClick` is set. */
   linkBase?: string
+  /** Completed/missed/todayPending cells call this instead of navigating (e.g. to open a modal). */
+  onCellClick?: (date: string) => void
 }) {
   return (
     <div className="grid grid-cols-5 gap-2">
@@ -45,16 +48,24 @@ export function HabitPreviewGrid({
             />
           )
 
-        const clickable = linkBase && CLICKABLE_STATES.includes(cell.state)
+        const clickable = CLICKABLE_STATES.includes(cell.state) && (onCellClick || linkBase)
 
         return (
           <div key={cell.date} className="relative aspect-square">
-            {clickable ? (
+            {!clickable ? (
+              content
+            ) : onCellClick ? (
+              <button
+                type="button"
+                onClick={() => onCellClick(cell.date)}
+                className="block h-full w-full"
+              >
+                {content}
+              </button>
+            ) : (
               <Link href={`${linkBase}/${cell.date}`} className="block h-full w-full">
                 {content}
               </Link>
-            ) : (
-              content
             )}
           </div>
         )

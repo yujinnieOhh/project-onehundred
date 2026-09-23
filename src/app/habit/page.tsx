@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getLocalDateString, daysUntil, addDays } from '@/lib/date'
 import { habitCellState } from '@/lib/habit'
-import { HabitPreviewGrid } from '@/components/HabitPreviewGrid'
+import { HabitGridWithModal } from '@/components/HabitGridWithModal'
 
 export default async function HabitDetailPage() {
   const supabase = await createClient()
@@ -91,7 +91,7 @@ export default async function HabitDetailPage() {
         )}
 
         <div className="rounded-xl border border-border bg-surface p-4">
-          <HabitPreviewGrid cells={cells} linkBase="/habit" />
+          <HabitGridWithModal cells={cells} />
         </div>
       </div>
     </main>
