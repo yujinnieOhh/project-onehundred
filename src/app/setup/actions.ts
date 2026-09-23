@@ -63,6 +63,8 @@ export async function createProfile(
   }
 
   const rewardEntries = [
+    { target_count: 7, title: String(formData.get('reward7') ?? '').trim() },
+    { target_count: 20, title: String(formData.get('reward20') ?? '').trim() },
     { target_count: 50, title: String(formData.get('reward50') ?? '').trim() },
     { target_count: 77, title: String(formData.get('reward77') ?? '').trim() },
     { target_count: 100, title: String(formData.get('reward100') ?? '').trim() },

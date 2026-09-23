@@ -82,9 +82,11 @@ export function SetupForm() {
       <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
         <p className="text-sm font-semibold text-text-primary">보상 (선택)</p>
         {[
-          { name: 'reward50', label: '50%' },
-          { name: 'reward77', label: '77%' },
-          { name: 'reward100', label: '100%' },
+          { name: 'reward7', label: '7개' },
+          { name: 'reward20', label: '20개' },
+          { name: 'reward50', label: '50개' },
+          { name: 'reward77', label: '77개' },
+          { name: 'reward100', label: '100개' },
         ].map((r) => (
           <div key={r.name} className="flex items-center gap-3">
             <span className="w-12 shrink-0 text-sm text-text-secondary">{r.label}</span>

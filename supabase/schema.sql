@@ -24,8 +24,8 @@ create table challenges (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null unique references profiles(id) on delete cascade,
   goal text not null check (char_length(goal) <= 40),
-  start_date date not null default '2025-09-23',
-  end_date date not null default '2025-12-31',
+  start_date date not null default '2026-09-23',
+  end_date date not null default '2026-12-31',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -34,7 +34,7 @@ create table challenges (
 create table rewards (
   id uuid primary key default gen_random_uuid(),
   challenge_id uuid not null references challenges(id) on delete cascade,
-  target_count int not null check (target_count in (50, 77, 100)),
+  target_count int not null check (target_count in (7, 20, 50, 77, 100)),
   title text,
   is_unlocked boolean not null default false,
   unlocked_at timestamptz,
