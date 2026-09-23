@@ -1,12 +1,17 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 import { sendFriendRequest, type FriendRequestState } from '@/app/friends/actions'
+import { getPostHog } from '@/lib/posthog-client'
 
 const initialState: FriendRequestState = { error: null, success: null }
 
 export function FriendRequestForm() {
   const [state, formAction, isPending] = useActionState(sendFriendRequest, initialState)
+
+  useEffect(() => {
+    if (state.success) getPostHog().capture('friend_request_sent')
+  }, [state.success])
 
   return (
     <form action={formAction} className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-4">

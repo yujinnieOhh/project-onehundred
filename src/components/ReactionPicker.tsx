@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { sendReaction } from '@/app/friends/reaction-actions'
 import { REACTION_EMOJIS } from '@/lib/reactions'
+import { getPostHog } from '@/lib/posthog-client'
 
 export function ReactionPicker({
   checkinId,
@@ -41,6 +42,7 @@ export function ReactionPicker({
           onClick={() =>
             startTransition(async () => {
               await sendReaction(checkinId, emoji)
+              getPostHog().capture('reaction_sent', { emoji })
               setOpen(false)
             })
           }

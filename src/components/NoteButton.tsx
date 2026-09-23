@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { saveNote } from '@/app/main/actions'
+import { getPostHog } from '@/lib/posthog-client'
 
 export function NoteButton({ initialNote }: { initialNote: string | null }) {
   const [open, setOpen] = useState(false)
@@ -33,6 +34,7 @@ export function NoteButton({ initialNote }: { initialNote: string | null }) {
             onClick={() =>
               startTransition(async () => {
                 await saveNote(note)
+                getPostHog().capture('note_saved')
                 setOpen(false)
               })
             }
