@@ -81,10 +81,17 @@ export default async function MainPage() {
     .map((c) => c.id);
   const { data: previewReactions } =
     previewCompletedIds.length > 0
-      ? await supabase.from("reactions").select("checkin_id").in("checkin_id", previewCompletedIds)
+      ? await supabase
+          .from("reactions")
+          .select("checkin_id")
+          .in("checkin_id", previewCompletedIds)
       : { data: [] };
-  const previewReactedIds = new Set((previewReactions ?? []).map((r) => r.checkin_id));
-  const previewCheckinIdByDate = new Map((previewCheckins ?? []).map((c) => [c.date, c.id]));
+  const previewReactedIds = new Set(
+    (previewReactions ?? []).map((r) => r.checkin_id)
+  );
+  const previewCheckinIdByDate = new Map(
+    (previewCheckins ?? []).map((c) => [c.date, c.id])
+  );
 
   const previewCells = Array.from({ length: previewLength }, (_, i) => {
     const date = addDays(previewStart, i);
@@ -97,7 +104,9 @@ export default async function MainPage() {
   });
 
   const friends = await getAcceptedFriendsWithActivity(supabase, user.id);
-  const activeFriends = friends.filter((f) => f.completedToday || f.completedYesterday);
+  const activeFriends = friends.filter(
+    (f) => f.completedToday || f.completedYesterday
+  );
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-bg px-5 py-10">
@@ -105,12 +114,15 @@ export default async function MainPage() {
       <div className="flex w-full max-w-sm flex-col gap-8">
         <div className="flex items-center justify-between">
           <Logo size="sm" />
-          <Link href="/settings" className="text-xs text-text-secondary underline">
+          <Link
+            href="/settings"
+            className="text-xs text-text-secondary underline"
+          >
             설정
           </Link>
         </div>
 
-        <div className="flex justify-around rounded-xl border border-border bg-surface p-4 text-center">
+        <div className="flex justify-around rounded-sm border border-border bg-surface px-4 py-2 text-center">
           <div>
             <p className="text-xl font-bold text-text-primary">
               {formatDots(today)}
@@ -131,16 +143,16 @@ export default async function MainPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-6">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/images/animals/sg_cheerup.png"
-              alt="sg"
-              width={88}
-              height={88}
-              className="shrink-0"
-              priority
-            />
+        <div className="flex items-center gap-4 rounded-sm border border-border bg-surface px-4 py-2">
+          <Image
+            src="/images/animals/sg_cheerup.png"
+            alt="sg"
+            width={140}
+            height={140}
+            className="shrink-0"
+            priority
+          />
+          <div className="flex flex-1 flex-col gap-3">
             <SpeechBubble>
               <p className="font-bold text-text-primary">{challenge.goal}</p>
               <p className="text-sm text-text-secondary">
@@ -149,27 +161,35 @@ export default async function MainPage() {
                   : "오늘 완료했냐멍?"}
               </p>
             </SpeechBubble>
-          </div>
-          <div className="flex justify-center gap-3">
-            <DoneButton completedToday={!!todayCheckin?.completed} />
-            <NoteButton initialNote={todayCheckin?.note ?? null} />
+            <div className="flex gap-3">
+              <DoneButton completedToday={!!todayCheckin?.completed} />
+              <NoteButton initialNote={todayCheckin?.note ?? null} />
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
+        <div className="flex flex-col gap-3 rounded-sm border border-border bg-surface px-4 py-2">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-semibold text-text-secondary">나의 100일</p>
-            <Link href="/habit" className="text-xs text-text-secondary underline">
+            <p className="text-sm font-semibold text-text-secondary">
+              나의 100일
+            </p>
+            <Link
+              href="/habit"
+              className="text-xs text-text-secondary underline"
+            >
               전체보기
             </Link>
           </div>
           <HabitPreviewGrid cells={previewCells} />
         </div>
 
-        <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
+        <div className="flex flex-col gap-3 rounded-sm border border-border bg-surface px-4 py-2">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-text-secondary">친구</p>
-            <Link href="/friends" className="text-xs text-text-secondary underline">
+            <Link
+              href="/friends"
+              className="text-xs text-text-secondary underline"
+            >
               전체보기
             </Link>
           </div>
@@ -179,9 +199,13 @@ export default async function MainPage() {
             </p>
           ) : (
             activeFriends.map((f) => (
-              <div key={f.id} className="flex items-center justify-between text-sm">
+              <div
+                key={f.id}
+                className="flex items-center justify-between text-sm"
+              >
                 <span className="text-text-primary">
-                  {f.nickname} <span className="text-text-secondary">@{f.username}</span>
+                  {f.nickname}{" "}
+                  <span className="text-text-secondary">@{f.username}</span>
                   <span className="ml-2 text-xs text-pink-deep">
                     {f.completedToday ? "오늘 완료 ✓" : "어제 완료 ✓"}
                   </span>
