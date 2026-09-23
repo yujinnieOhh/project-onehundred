@@ -15,7 +15,7 @@ export function NoteButton({ initialNote }: { initialNote: string | null }) {
         onClick={() => setOpen((v) => !v)}
         className="rounded-full border border-border bg-surface px-6 py-3 font-semibold text-text-primary"
       >
-        메모
+        메모도 할게
       </button>
       {open && (
         <div className="flex flex-col gap-2">

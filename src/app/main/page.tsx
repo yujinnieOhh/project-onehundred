@@ -1,8 +1,10 @@
+import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getLocalDateString, daysUntil } from '@/lib/date'
 import { DoneButton } from '@/components/DoneButton'
 import { NoteButton } from '@/components/NoteButton'
+import { SpeechBubble } from '@/components/SpeechBubble'
 
 export default async function MainPage() {
   const supabase = await createClient()
@@ -30,7 +32,7 @@ export default async function MainPage() {
 
   const { data: todayCheckin } = await supabase
     .from('checkins')
-    .select('id, note')
+    .select('id, note, completed')
     .eq('challenge_id', challenge.id)
     .eq('date', today)
     .maybeSingle()
@@ -39,6 +41,7 @@ export default async function MainPage() {
     .from('checkins')
     .select('id', { count: 'exact', head: true })
     .eq('challenge_id', challenge.id)
+    .eq('completed', true)
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-bg px-5 py-10">
@@ -56,11 +59,27 @@ export default async function MainPage() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center gap-4 rounded-xl border border-border bg-surface p-6 text-center">
-          <p className="text-sm font-semibold text-text-secondary">TODAY&apos;S GOAL</p>
-          <p className="text-lg font-bold text-text-primary">{challenge.goal}</p>
-          <DoneButton completedToday={!!todayCheckin} />
-          {todayCheckin && <NoteButton initialNote={todayCheckin.note} />}
+        <div className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-6">
+          <div className="flex items-center gap-3">
+            <Image
+              src="/images/animals/sg_cheerup.png"
+              alt="sg"
+              width={88}
+              height={88}
+              className="shrink-0"
+              priority
+            />
+            <SpeechBubble>
+              <p className="font-bold text-text-primary">{challenge.goal}하기</p>
+              <p className="text-sm text-text-secondary">
+                {todayCheckin?.completed ? '오늘 완료 축하한다멍' : '오늘 완료했냐멍?'}
+              </p>
+            </SpeechBubble>
+          </div>
+          <div className="flex justify-center gap-3">
+            <DoneButton completedToday={!!todayCheckin?.completed} />
+            <NoteButton initialNote={todayCheckin?.note ?? null} />
+          </div>
         </div>
       </div>
     </main>

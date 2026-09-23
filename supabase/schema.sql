@@ -47,6 +47,7 @@ create table checkins (
   challenge_id uuid not null references challenges(id) on delete cascade,
   date date not null,
   note text,
+  completed boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique (challenge_id, date)

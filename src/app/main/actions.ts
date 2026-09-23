@@ -31,7 +31,12 @@ export async function markDone() {
   if (!ctx) return
 
   const today = getLocalDateString(ctx.profile.timezone)
-  await ctx.supabase.from('checkins').insert({ challenge_id: ctx.challenge.id, date: today })
+  await ctx.supabase
+    .from('checkins')
+    .upsert(
+      { challenge_id: ctx.challenge.id, date: today, completed: true },
+      { onConflict: 'challenge_id,date' }
+    )
   revalidatePath('/main')
 }
 
@@ -42,9 +47,10 @@ export async function saveNote(note: string) {
   const today = getLocalDateString(ctx.profile.timezone)
   await ctx.supabase
     .from('checkins')
-    .update({ note })
-    .eq('challenge_id', ctx.challenge.id)
-    .eq('date', today)
+    .upsert(
+      { challenge_id: ctx.challenge.id, date: today, note },
+      { onConflict: 'challenge_id,date' }
+    )
   revalidatePath('/main')
 }
 
@@ -55,7 +61,7 @@ export async function undoDone() {
   const today = getLocalDateString(ctx.profile.timezone)
   await ctx.supabase
     .from('checkins')
-    .delete()
+    .update({ completed: false })
     .eq('challenge_id', ctx.challenge.id)
     .eq('date', today)
   revalidatePath('/main')
