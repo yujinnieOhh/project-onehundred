@@ -4,13 +4,11 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getLocalDateString, daysUntil, addDays, formatDots } from "@/lib/date";
 import { getAcceptedFriendsWithActivity } from "@/lib/friends";
+import { habitCellState } from "@/lib/habit";
 import { DoneButton } from "@/components/DoneButton";
 import { NoteButton } from "@/components/NoteButton";
 import { SpeechBubble } from "@/components/SpeechBubble";
-import {
-  HabitPreviewGrid,
-  type HabitCellState,
-} from "@/components/HabitPreviewGrid";
+import { HabitPreviewGrid } from "@/components/HabitPreviewGrid";
 
 export default async function MainPage() {
   const supabase = await createClient();
@@ -77,19 +75,7 @@ export default async function MainPage() {
 
   const previewCells = Array.from({ length: previewLength }, (_, i) => {
     const date = addDays(previewStart, i);
-    let state: HabitCellState;
-    if (date > today) {
-      state = "future";
-    } else if (date < joinDate) {
-      state = "preJoin";
-    } else if (completedByDate.has(date)) {
-      state = "completed";
-    } else if (date < today) {
-      state = "missed";
-    } else {
-      state = "todayPending"; // today, not completed yet
-    }
-    return { date, state };
+    return { date, state: habitCellState(date, today, joinDate, completedByDate.has(date)) };
   });
 
   const friends = await getAcceptedFriendsWithActivity(supabase, user.id);
@@ -145,9 +131,12 @@ export default async function MainPage() {
         </div>
 
         <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
-          <p className="text-sm font-semibold text-text-secondary">
-            나의 100일
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-semibold text-text-secondary">나의 100일</p>
+            <Link href="/habit" className="text-xs text-text-secondary underline">
+              전체보기
+            </Link>
+          </div>
           <HabitPreviewGrid cells={previewCells} />
         </div>
 

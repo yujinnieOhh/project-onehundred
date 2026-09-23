@@ -37,7 +37,24 @@ export async function markDone() {
       { challenge_id: ctx.challenge.id, date: today, completed: true },
       { onConflict: 'challenge_id,date' }
     )
+
+  const { count } = await ctx.supabase
+    .from('checkins')
+    .select('id', { count: 'exact', head: true })
+    .eq('challenge_id', ctx.challenge.id)
+    .eq('completed', true)
+
+  if (count) {
+    await ctx.supabase
+      .from('rewards')
+      .update({ is_unlocked: true, unlocked_at: new Date().toISOString() })
+      .eq('challenge_id', ctx.challenge.id)
+      .eq('is_unlocked', false)
+      .lte('target_count', count)
+  }
+
   revalidatePath('/main')
+  revalidatePath('/habit')
 }
 
 export async function saveNote(note: string) {
