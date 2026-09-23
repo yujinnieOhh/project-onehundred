@@ -11,6 +11,7 @@ import { NoteButton } from "@/components/NoteButton";
 import { SpeechBubble } from "@/components/SpeechBubble";
 import { HabitPreviewGrid } from "@/components/HabitPreviewGrid";
 import { ReminderModal } from "@/components/ReminderModal";
+import { Logo } from "@/components/Logo";
 
 export default async function MainPage() {
   const supabase = await createClient();
@@ -102,7 +103,8 @@ export default async function MainPage() {
     <main className="flex min-h-screen flex-col items-center bg-bg px-5 py-10">
       <ReminderModal />
       <div className="flex w-full max-w-sm flex-col gap-8">
-        <div className="flex justify-end">
+        <div className="flex items-center justify-between">
+          <Logo size="sm" />
           <Link href="/settings" className="text-xs text-text-secondary underline">
             설정
           </Link>
