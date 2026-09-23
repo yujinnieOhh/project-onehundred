@@ -10,6 +10,7 @@ import { DoneButton } from "@/components/DoneButton";
 import { NoteButton } from "@/components/NoteButton";
 import { SpeechBubble } from "@/components/SpeechBubble";
 import { HabitPreviewGrid } from "@/components/HabitPreviewGrid";
+import { ReminderModal } from "@/components/ReminderModal";
 
 export default async function MainPage() {
   const supabase = await createClient();
@@ -84,6 +85,7 @@ export default async function MainPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-bg px-5 py-10">
+      <ReminderModal />
       <div className="flex w-full max-w-sm flex-col gap-8">
         <div className="flex justify-end">
           <Link href="/settings" className="text-xs text-text-secondary underline">
